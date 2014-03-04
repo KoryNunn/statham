@@ -1,0 +1,17 @@
+{
+  "name": "statham",
+  "version": "0.0.0",
+  "description": "A layer on top of JSON that handles object references",
+  "main": "statham.js",
+  "scripts": {
+    "test": "node test"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "grape": "^0.1.9"
+  },
+  "dependencies": {
+    "clone": "^0.1.11"
+  }
+}
