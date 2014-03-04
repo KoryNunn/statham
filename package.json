@@ -1,6 +1,6 @@
 {
   "name": "statham",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "A layer on top of JSON that handles object references",
   "main": "statham.js",
   "scripts": {
