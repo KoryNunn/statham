@@ -34,8 +34,22 @@ grape('speed', function(t) {
 
     statham.parse(statham.stringify(thing));
 
-    console.log(Date.now() - start);
-
     t.ok(Date.now() - start < 100);
 
+});
+
+grape('toJSON', function(t) {
+    t.plan(1);
+
+    function Thing(){
+
+    }
+    Thing.prototype.toJSON = function(){
+        return {c:3};
+    };
+
+    var thing = new Thing();
+    thing.thing = thing;
+
+    t.deepEqual(statham.parse(statham.stringify(thing)), JSON.parse(JSON.stringify(thing)));
 });

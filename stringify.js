@@ -1,43 +1,52 @@
 var createKey = require('./createKey'),
-    keyKey = createKey(-1),
-    clone = require('clone');
+    keyKey = createKey(-1);
 
-function Scanned(){}
+function toJsonValue(value){
+    if(value != null && typeof value === 'object'){
+        var result = value instanceof Array ? [] : {},
+            output = value;
+        if('toJSON' in value){
+            output = value.toJSON();
+        }
+        for(var key in output){
+            result[key] = output[key];
+        }
+        return result;
+    }
+
+    return value;
+}
 
 function stringify(input, replacer, spacer){
-    input = {result: clone(input)};
-
     var objects = [],
         refs = [];
 
     function scan(input){
-        if(input instanceof Scanned){
+
+        if(input === null || typeof input !== 'object'){
             return input;
         }
-        var output = new Scanned();
-        for(var key in input){
-            var value = input[key];
 
-            output[key] = value;
+        var output,
+            index = objects.indexOf(input);
 
-            if(value != null && typeof value === 'object'){
-                var index = objects.indexOf(value);
-
-                if(index < 0){
-                    index = objects.length;
-                    objects[index] = value;
-                    value[keyKey] = refs[index] = createKey(index);
-                    output[key] = scan(value);
-                    continue;
-                }
-
-                output[key] = refs[index];
-            }
+        if(index >= 0){
+            return refs[index];
         }
+
+        index = objects.length;
+        objects[index] = input;
+        output = toJsonValue(input);
+        output[keyKey] = refs[index] = createKey(index);
+
+        for(var key in output){
+            output[key] = scan(output[key]);
+        }
+
         return output;
     }
 
-    return JSON.stringify(scan(input).result, replacer, spacer);
+    return JSON.stringify(scan(input), replacer, spacer);
 }
 
 module.exports = stringify;

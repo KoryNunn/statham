@@ -41,6 +41,16 @@ Which will look like:
         thing: inflatedObj
     }
 
+You can also optionally revive an object that has statham markers in it but calling:
+
+    var legitObject = statham.revive(stathamMarkeredObject);
+
+This is useful when someone else got to the json before you, and did:
+
+    var stathamMarkeredObject = JSON.parse(stathamStringifiedJSON);
+
+Which will work without issue, but still have all the statham markers in it.
+
 ## How
 
 statham uses extremely rarely used string characters above \uE000 to mark references.
