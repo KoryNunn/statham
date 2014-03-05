@@ -10,8 +10,5 @@
   "license": "ISC",
   "devDependencies": {
     "grape": "^0.1.9"
-  },
-  "dependencies": {
-    "clone": "^0.1.11"
   }
 }
