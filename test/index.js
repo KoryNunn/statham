@@ -53,3 +53,59 @@ grape('toJSON', function(t) {
 
     t.deepEqual(statham.parse(statham.stringify(thing)), JSON.parse(JSON.stringify(thing)));
 });
+
+grape('revive', function(t) {
+    t.plan(2);
+
+    var thing = {};
+    thing.thing = thing;
+
+    var stringified = statham.stringify(thing);
+
+    var markered = JSON.parse(stringified);
+
+    var revived = statham.revive(markered);
+
+    t.ok(revived);
+    t.ok(revived.thing === revived);
+});
+
+grape('revive already revived', function(t) {
+    t.plan(2);
+
+    var thing = {};
+    thing.thing = thing;
+
+    var stringified = statham.stringify(thing);
+
+    var markered = JSON.parse(stringified);
+
+    var revived = statham.revive(markered);
+
+    var doubleRevived = statham.revive(revived);
+
+    t.ok(doubleRevived);
+    t.ok(doubleRevived.thing === doubleRevived);
+});
+
+grape('revive referenced obj', function(t) {
+    t.plan(4);
+
+    var thing = {};
+    thing.thing = thing;
+
+    var revivedThing = statham.revive(thing);
+
+    t.ok(revivedThing);
+    t.ok(revivedThing.thing === revivedThing);
+
+    var stuff = {};
+    stuff.thing = {
+        stuff: stuff
+    };
+
+    var revivedStuff = statham.revive(stuff);
+
+    t.ok(revivedStuff);
+    t.ok(revivedStuff.thing.stuff === revivedStuff);
+});

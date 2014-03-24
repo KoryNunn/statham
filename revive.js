@@ -3,7 +3,8 @@ var createKey = require('./createKey'),
 
 function revive(input){
     var objects = {},
-        scannedObjects = [];
+        scannedInputObjects = [];
+        scannedOutputObjects = [];
 
     function scan(input){
         var output = input;
@@ -12,7 +13,12 @@ function revive(input){
             return output;
         }
 
-        output = input instanceof Array ? [] : {};
+        if(scannedOutputObjects.indexOf(input) < 0){
+            output = input instanceof Array ? [] : {};
+            scannedOutputObjects.push(output);
+            scannedInputObjects.push(input);
+        }
+
 
         if(input[keyKey]){
             objects[input[keyKey]] = output;
@@ -26,11 +32,18 @@ function revive(input){
             }
 
             if(value != null && typeof value === 'object'){
-                if(scannedObjects.indexOf(value)<0){
-                    scannedObjects.push(value);
+                var objectIndex = scannedInputObjects.indexOf(value);
+                if(objectIndex<0){
                     output[key] = scan(value);
+                }else{
+                    output[key] = scannedOutputObjects[objectIndex];
                 }
-            }else if(typeof value === 'string' && value.length === 1 && value.charCodeAt(0) > keyKey.charCodeAt(0)){
+            }else if(
+                typeof value === 'string' &&
+                value.length === 1 &&
+                value.charCodeAt(0) > keyKey.charCodeAt(0) &&
+                value in objects
+            ){
                 output[key] = objects[value];
             }else{
                 output[key] = input[key];
