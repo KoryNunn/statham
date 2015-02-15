@@ -28,6 +28,10 @@ function revive(input){
         return input;
     }
 
+    if(!input || typeof input !== 'object'){
+        return input;
+    }
+
     return scan(input);
 }
 

@@ -1,8 +1,8 @@
-var grape = require('grape'),
+var test = require('tape'),
     util = require('util'),
     statham = require('../statham');
 
-grape('statham', function(t) {
+test('statham', function(t) {
     t.plan(1);
 
     var thing = {},
@@ -18,7 +18,7 @@ grape('statham', function(t) {
     t.equal(util.inspect(statham.parse(statham.stringify(thing))), util.inspect(thing));
 });
 
-grape('speed', function(t) {
+test('speed', function(t) {
     t.plan(1);
 
     var thing = [],
@@ -38,7 +38,7 @@ grape('speed', function(t) {
 
 });
 
-grape('toJSON', function(t) {
+test('toJSON', function(t) {
     t.plan(1);
 
     function Thing(){
@@ -52,4 +52,10 @@ grape('toJSON', function(t) {
     thing.thing = thing;
 
     t.deepEqual(statham.parse(statham.stringify(thing)), JSON.parse(JSON.stringify(thing)));
+});
+
+test('revive null', function(t) {
+    t.plan(1);
+
+    t.equal(statham.revive(null), null);
 });
