@@ -19,6 +19,7 @@ function toJsonValue(value){
 
 function stringify(input, replacer, spacer){
     var objects = [],
+        outputObjects = [],
         refs = [];
 
     function scan(input){
@@ -31,13 +32,15 @@ function stringify(input, replacer, spacer){
             index = objects.indexOf(input);
 
         if(index >= 0){
+            outputObjects[index][keyKey] = refs[index]
             return refs[index];
         }
 
         index = objects.length;
         objects[index] = input;
         output = toJsonValue(input);
-        output[keyKey] = refs[index] = createKey(index);
+        outputObjects[index] = output;
+        refs[index] = createKey(index);
 
         for(var key in output){
             output[key] = scan(output[key]);
