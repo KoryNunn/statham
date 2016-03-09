@@ -5,7 +5,7 @@ Statham
 
 statham is a layer on top of JSON that handles object references.
 
-It took inspiration from https://github.com/graniteds/jsonr
+It takes inspiration from https://github.com/graniteds/jsonr
 
 ## Usage
 
@@ -41,7 +41,7 @@ Which will look like:
         thing: inflatedObj
     }
 
-You can also optionally revive an object that has statham markers in it but calling:
+You can also optionally revive an object that has statham markers in it by calling:
 
     var legitObject = statham.revive(stathamMarkeredObject);
 

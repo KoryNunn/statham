@@ -18,7 +18,8 @@ test('statham', function(t) {
     t.equal(util.inspect(statham.parse(statham.stringify(thing))), util.inspect(thing));
 });
 
-test('speed', function(t) {
+// 50 is arbitrary. JSON.stringify/parse is *very* fast
+test('speed shouldnt be more than 50 times slower than JSON', function(t) {
     t.plan(1);
 
     var thing = [],
@@ -31,10 +32,14 @@ test('speed', function(t) {
     }
 
     var start = Date.now();
+    JSON.parse(JSON.stringify(thing));
+    var jsonTime = Date.now() - start;
 
+    var start = Date.now();
     statham.parse(statham.stringify(thing));
+    var stathamTime = Date.now() - start;
 
-    t.ok(Date.now() - start < 100);
+    t.ok(stathamTime < jsonTime * 50);
 
 });
 
@@ -108,4 +113,18 @@ test('revive referenced obj', function(t) {
 
     t.ok(revivedStuff);
     t.ok(revivedStuff.thing.stuff === revivedStuff);
+});
+
+test('revive null', function(t) {
+    t.plan(1);
+
+    t.equal(statham.revive(null), null);
+});
+
+test('revive function', function(t) {
+    t.plan(1);
+
+    var x = function(){};
+
+    t.equal(statham.revive(x), x);
 });
