@@ -1,5 +1,6 @@
 var createKey = require('./createKey'),
-    keyKey = createKey(-1);
+    keyKey = createKey(-1),
+    isInstance = require('./isInstance');
 
 function toJsonValue(value){
     if(value != null && typeof value === 'object'){
@@ -23,8 +24,7 @@ function stringify(input, replacer, spacer){
         refs = [];
 
     function scan(input){
-
-        if(input === null || typeof input !== 'object'){
+        if(!isInstance(input)){
             return input;
         }
 

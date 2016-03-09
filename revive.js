@@ -1,5 +1,6 @@
 var createKey = require('./createKey'),
-    keyKey = createKey(-1);
+    keyKey = createKey(-1),
+    isInstance = require('./isInstance');
 
 function revive(input){
     var objects = {},
@@ -9,12 +10,15 @@ function revive(input){
     function scan(input){
         var output = input;
 
-        if(typeof output !== 'object'){
+        if(!isInstance(output)){
             return output;
         }
 
         if(scannedOutputObjects.indexOf(input) < 0){
-            output = input instanceof Array ? [] : {};
+
+            // The only way a function got here is if it was returned from a reviver.
+            // Just use the passed function, as they cant be cloned.
+            output = input instanceof Array ? [] : typeof input === 'function' ? input : {};
             scannedOutputObjects.push(output);
             scannedInputObjects.push(input);
         }
@@ -31,7 +35,7 @@ function revive(input){
                 continue;
             }
 
-            if(value != null && typeof value === 'object'){
+            if(isInstance(value)){
                 var objectIndex = scannedInputObjects.indexOf(value);
                 if(objectIndex<0){
                     output[key] = scan(value);

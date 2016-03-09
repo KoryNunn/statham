@@ -9,6 +9,6 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "grape": "^0.1.9"
+    "tape": "^4.5.1"
   }
 }
