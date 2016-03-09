@@ -4,18 +4,29 @@ var createKey = require('./createKey'),
 
 function revive(input){
     var objects = {},
-        scannedObjects = [];
+        scannedObjects = [],
+        scannedOutputs = [];
 
     function scan(input){
+
         var output = input;
 
-        if(!isInstance(input) || !(keyKey in input)){
+        if(!isInstance(input)){
             return output;
+        }
+
+        var inputIndex = scannedObjects.indexOf(input);
+
+        if(~inputIndex){
+            return scannedOutputs[inputIndex];
         }
 
         output = input && input instanceof Array ? [] : typeof input === 'function' ? input : {};
 
-        if(input[keyKey]){
+        scannedObjects.push(input);
+        scannedOutputs.push(output);
+
+        if(keyKey in input){
             objects[input[keyKey]] = output;
         }
 
@@ -27,10 +38,7 @@ function revive(input){
             }
 
             if(isInstance(value)){
-                if(scannedObjects.indexOf(value)<0){
-                    scannedObjects.push(value);
-                    output[key] = scan(value);
-                }
+                output[key] = scan(value);
             }else if(
                 typeof value === 'string' &&
                 value.length === 1 &&
