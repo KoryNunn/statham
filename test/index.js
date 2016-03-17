@@ -1,6 +1,7 @@
 var test = require('tape'),
     util = require('util'),
-    statham = require('../statham');
+    statham = require('../statham'),
+    createKey = require('../createKey');
 
 test('statham', function(t) {
     t.plan(1);
@@ -127,4 +128,45 @@ test('revive function', function(t) {
     var x = function(){};
 
     t.equal(statham.revive(x), x);
+});
+
+test('enormous number of instances', function(t) {
+    t.plan(3);
+
+    var instanceCount = 8191;
+
+    var x = {};
+
+    for(var i = 0; i < instanceCount; i++){
+        var y = {};
+        x[i + 'a'] = y;
+        x[i + 'b'] = y;
+    }
+
+    var result = statham.parse(statham.stringify(x));
+
+    t.deepEqual(result, x);
+
+    var set = new Set();
+
+    var keys = Object.keys(result);
+
+    t.equal(keys.length, instanceCount * 2);
+
+    keys.forEach(function(key){
+        set.add(result[key]);
+    });
+
+    t.equal(set.size, instanceCount);
+});
+
+test('createKey', function(t){
+
+    t.plan(4);
+
+    t.equal(createKey(-1), '');
+    t.equal(createKey(0), '');
+    t.equal(createKey(1), '');
+    t.equal(createKey(8191), '');
+
 });

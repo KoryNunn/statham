@@ -12,6 +12,7 @@
     "tape": "^4.5.1"
   },
   "dependencies": {
-    "clone": "^0.1.11"
+    "clone": "^0.1.11",
+    "to-base": "^1.0.0"
   }
 }

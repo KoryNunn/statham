@@ -1,12 +1,15 @@
-function escapeHex(hex){
-    return String.fromCharCode(hex);
-}
+var toBase = require('to-base'),
+    offset = 0xE001,
+    base = 0xFFFF - offset;
 
 function createKey(number){
-    if(number + 0xE001 > 0xFFFF){
-        throw "Too many references. Log an issue on gihub an i'll add an order of magnatude to the keys.";
+    if(!number){
+        return String.fromCharCode(offset);
     }
-    return escapeHex(number + 0xE001);
+
+    return toBase(number, base).reverse().map(function(column){
+        return String.fromCharCode(column + offset);
+    }).join('');
 }
 
 module.exports = createKey;

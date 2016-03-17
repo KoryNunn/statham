@@ -41,7 +41,6 @@ function revive(input){
                 output[key] = scan(value);
             }else if(
                 typeof value === 'string' &&
-                value.length === 1 &&
                 value.charCodeAt(0) > keyKey.charCodeAt(0) &&
                 value in objects
             ){
