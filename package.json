@@ -14,5 +14,17 @@
   "dependencies": {
     "clone": "^0.1.11",
     "to-base": "^1.0.0"
-  }
+  },
+  "directories": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KoryNunn/statham.git"
+  },
+  "keywords": [],
+  "bugs": {
+    "url": "https://github.com/KoryNunn/statham/issues"
+  },
+  "homepage": "https://github.com/KoryNunn/statham#readme"
 }
