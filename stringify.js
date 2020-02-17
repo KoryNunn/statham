@@ -23,9 +23,9 @@ function stringify(input, replacer, spacer){
         outputObjects = [],
         refs = [];
 
-    function scan(input){
+    function scan(key, input){
         if(!isInstance(input)){
-            return input;
+            return replacer ? replacer.call(this, key, input) : input;
         }
 
         var output,
@@ -38,18 +38,22 @@ function stringify(input, replacer, spacer){
 
         index = objects.length;
         objects[index] = input;
-        output = toJsonValue(input);
+        output = input;
+        if(replacer){
+            output = replacer.call(this, key, input);
+        }
+        output = toJsonValue(output);
         outputObjects[index] = output;
         refs[index] = createKey(index);
 
         for(var key in output){
-            output[key] = scan(output[key]);
+            output[key] = scan.call(output, key, output[key])
         }
 
         return output;
     }
 
-    return JSON.stringify(scan(input), replacer, spacer);
+    return JSON.stringify(scan.call(null, '', input), null, spacer);
 }
 
 module.exports = stringify;

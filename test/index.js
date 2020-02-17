@@ -19,6 +19,35 @@ test('statham', function(t) {
     t.equal(util.inspect(statham.parse(statham.stringify(thing))), util.inspect(thing));
 });
 
+test('replaced complex object', function(t) {
+    t.plan(1);
+
+    function Something(){
+
+    }
+
+    var something = new Something();
+
+    var thing = {
+            a: something,
+            b: something
+        };
+
+    var stuff = {};
+
+    var stringified = statham.stringify(thing, function(key, value){
+        if(value && value instanceof Something){
+            return stuff;
+        }
+
+        return value;
+    })
+
+    var parsed = statham.parse(stringified);
+
+    t.equal(parsed.a, parsed.b);
+});
+
 // 50 is arbitrary. JSON.stringify/parse is *very* fast
 test('speed shouldnt be more than 50 times slower than JSON', function(t) {
     t.plan(1);
